@@ -50,7 +50,7 @@ msi.handle(pair, function() {
 
 var client = events();
 
-client.init()
+
 
 client.on('fail', function () {
   console.log('fail')
