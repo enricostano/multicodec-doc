@@ -1,5 +1,5 @@
 
-var client = require('./lib/codec')()
+var client = require('./lib/client')()
 var multistream = require('./lib/multistreamwrapper.js')()
 
 client.on('wrongformat', function () {
