@@ -6,16 +6,17 @@ var pair = streamPair.create();
 var msi = new Interactive();
 var mss = new Select();
 
-var events = require('./lib/events')
+var Client = require('./lib/codec')
+var remote =  document.getElementById('response')
 
 mss.handle(pair.other);
 
 mss.addHandler('/xxx/', function(ds) {
   ds.on('data', function(chunk) {
-    console.log('que si');
+    console.log(chunk.toString());
   });
   ds.on('end', function() {
-    ds.end();
+
   });
 });
 
@@ -38,24 +39,18 @@ msi.handle(pair, function() {
     console.log('results: ', result);
   });
 
-  msi.select('/wtf/', function(err, ds) {
-    if (err) {
-      return console.log(err)
-    }
 
-    ds.write('wollll');
-    ds.end();
-  });
 });
 
-var client = events();
+var client = Client();
 
-
-
-client.on('fail', function () {
-  console.log('fail')
+client.on('wrongformat', function () {
+  response.textContent = 'wrong format'
 })
-
 client.on('message', function (message) {
-  console.log(message)
+  msi.select(message.protocol, function(err, ds) {
+    if (err) return  response.textContent = err
+    ds.write(message.data)
+    ds.end();
+  });
 })
